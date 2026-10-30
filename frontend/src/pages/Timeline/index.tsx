@@ -6,6 +6,7 @@ import LazyImage from '../../components/LazyImage'
 import PeriodFilter from '../../components/PeriodFilter'
 import { useInfiniteScroll } from '../../hooks/useInfiniteScroll'
 import { publicApi } from '../../services/publicApi'
+import { apiUrl } from '../../services/api'
 import { formatFullDate } from '../../utils/format'
 import type { PeriodSummary, TimelineItem } from '../../types'
 
@@ -175,7 +176,7 @@ export default function Timeline() {
                     </div>
                     {item.representativePhoto && (
                       <LazyImage
-                        src={item.representativePhoto.thumbnailUrl}
+                        src={apiUrl(item.representativePhoto.thumbnailUrl)}
                         wrapperClassName="timeline-photo"
                       />
                     )}

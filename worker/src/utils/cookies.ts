@@ -2,35 +2,41 @@
 
 export const SESSION_COOKIE = 'admin_session'
 
+export type SessionSameSite = 'Lax' | 'None'
+
 // 构建安全的 Session Cookie
+// sameSite 为 None 时按规范必须同时设置 Secure（跨站部署场景）
 export function buildSessionCookie(
   token: string,
   maxAgeSeconds: number,
   secure: boolean,
+  sameSite: SessionSameSite = 'Lax',
 ): string {
+  const needSecure = secure || sameSite === 'None'
   const parts = [
     `${SESSION_COOKIE}=${token}`,
     'Path=/',
     'HttpOnly',
-    'SameSite=Lax',
+    `SameSite=${sameSite}`,
     `Max-Age=${maxAgeSeconds}`,
   ]
-  if (secure) {
+  if (needSecure) {
     parts.push('Secure')
   }
   return parts.join('; ')
 }
 
 // 清除 Session Cookie
-export function clearSessionCookie(secure: boolean): string {
+export function clearSessionCookie(secure: boolean, sameSite: SessionSameSite = 'Lax'): string {
+  const needSecure = secure || sameSite === 'None'
   const parts = [
     `${SESSION_COOKIE}=`,
     'Path=/',
     'HttpOnly',
-    'SameSite=Lax',
+    `SameSite=${sameSite}`,
     'Max-Age=0',
   ]
-  if (secure) {
+  if (needSecure) {
     parts.push('Secure')
   }
   return parts.join('; ')

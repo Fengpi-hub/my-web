@@ -3,6 +3,15 @@ import type { ApiResponse } from '../types'
 // 公开 API 基础地址：留空表示同源 /api
 const BASE_URL: string = (import.meta.env.VITE_API_BASE as string | undefined) ?? ''
 
+// 拼接 API 绝对地址。后端返回的相对路径（/api/...）统一经此函数处理，
+// 跨域部署（VITE_API_BASE 非空）时会指向 API 域名；同源部署时保持相对路径。
+export function apiUrl(path: string): string {
+  if (path.startsWith('http://') || path.startsWith('https://')) {
+    return path
+  }
+  return `${BASE_URL}${path}`
+}
+
 export class ApiClientError extends Error {
   readonly code: string
   readonly status: number

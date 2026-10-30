@@ -1,4 +1,4 @@
-import { api } from './api'
+import { api, apiUrl } from './api'
 import type {
   AdminDiaryDetail,
   AdminDiaryListResult,
@@ -168,7 +168,7 @@ export const adminApi = {
     return api.get(`/api/admin/data/tasks/${encodeURIComponent(taskId)}`)
   },
   downloadDataUrl(taskId: string): string {
-    return `/api/admin/data/tasks/${encodeURIComponent(taskId)}/download`
+    return apiUrl(`/api/admin/data/tasks/${encodeURIComponent(taskId)}/download`)
   },
   uploadImportZip(file: File, onProgress?: (ratio: number) => void): Promise<{
     uploadId: string
@@ -177,7 +177,7 @@ export const adminApi = {
   }> {
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest()
-      xhr.open('POST', '/api/admin/data/import/upload')
+      xhr.open('POST', apiUrl('/api/admin/data/import/upload'))
       xhr.withCredentials = true
       xhr.setRequestHeader('Content-Type', 'application/zip')
       xhr.upload.onprogress = (event) => {
@@ -212,7 +212,7 @@ export const adminApi = {
 
 // 管理端图片地址（草稿照片也必须通过管理接口读取）
 export function adminPhotoUrl(photoId: string, variant: 'thumbnail' | 'original'): string {
-  return `/api/admin/photos/${encodeURIComponent(photoId)}/${variant}`
+  return apiUrl(`/api/admin/photos/${encodeURIComponent(photoId)}/${variant}`)
 }
 
 // 带进度的二进制上传（PUT 原图 / 缩略图）
@@ -223,7 +223,7 @@ export function uploadBinary(
 ): Promise<void> {
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest()
-    xhr.open('PUT', path)
+    xhr.open('PUT', apiUrl(path))
     xhr.withCredentials = true
     xhr.setRequestHeader('Content-Type', blob.type || 'application/octet-stream')
     xhr.upload.onprogress = (event) => {

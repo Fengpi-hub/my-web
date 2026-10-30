@@ -3,6 +3,7 @@ import { error as errorResponse, json } from './utils/response'
 import { AppError } from './utils/errors'
 import { nowIso } from './utils/id'
 import { Router } from './utils/router'
+import { allowedOrigins } from './middleware/csrf'
 import { registerAdminAuthRoutes } from './routes/admin-auth'
 import { registerAdminDiaryRoutes } from './routes/admin-diaries'
 import { registerAdminPhotoRoutes } from './routes/admin-photos'
@@ -41,27 +42,59 @@ registerAdminDataRoutes(router)
 // 受控图片访问
 registerMediaRoutes(router)
 
+// 跨域支持：前端与 API 分域部署时（如 Pages 主域 + api 子域），
+// 仅对可信来源（自身源 + APP_ORIGIN）回显 CORS 头，允许携带 Cookie。
+function buildCorsHeaders(origin: string | null, preflight: boolean): Headers {
+  const headers = new Headers()
+  if (origin) {
+    headers.set('Access-Control-Allow-Origin', origin)
+    headers.set('Access-Control-Allow-Credentials', 'true')
+    headers.append('Vary', 'Origin')
+  }
+  if (preflight) {
+    headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
+    headers.set('Access-Control-Allow-Headers', 'Content-Type')
+    headers.set('Access-Control-Max-Age', '86400')
+  }
+  return headers
+}
+
+function withCors(response: Response, origin: string | null): Response {
+  if (!origin) {
+    return response
+  }
+  const next = new Response(response.body, response)
+  next.headers.set('Access-Control-Allow-Origin', origin)
+  next.headers.set('Access-Control-Allow-Credentials', 'true')
+  next.headers.append('Vary', 'Origin')
+  return next
+}
+
 export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
-    // CORS 预检（同源部署时通常无需跨域，此处预留）
+    const origin = request.headers.get('Origin')
+    const trustedOrigin =
+      origin && allowedOrigins(request, env.APP_ORIGIN).has(origin) ? origin : null
+
+    // CORS 预检
     if (request.method === 'OPTIONS') {
-      return new Response(null, { status: 204 })
+      return new Response(null, { status: 204, headers: buildCorsHeaders(trustedOrigin, true) })
     }
 
     try {
       const response = await router.handle(request, env, ctx)
       if (response) {
-        return response
+        return withCors(response, trustedOrigin)
       }
-      return errorResponse('NOT_FOUND', '接口不存在', 404)
+      return withCors(errorResponse('NOT_FOUND', '接口不存在', 404), trustedOrigin)
     } catch (err) {
       // 业务错误：返回结构化错误，不暴露内部细节
       if (err instanceof AppError) {
-        return errorResponse(err.code, err.message, err.status)
+        return withCors(errorResponse(err.code, err.message, err.status), trustedOrigin)
       }
       // 未预期错误：记录日志，返回统一内部错误
       console.error('Unexpected error:', err)
-      return errorResponse('INTERNAL_ERROR', '服务器内部错误', 500)
+      return withCors(errorResponse('INTERNAL_ERROR', '服务器内部错误', 500), trustedOrigin)
     }
   },
 }

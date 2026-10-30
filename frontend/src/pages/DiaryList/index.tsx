@@ -4,6 +4,7 @@ import VisitorLayout from '../../components/VisitorLayout'
 import LazyImage from '../../components/LazyImage'
 import { useInfiniteScroll } from '../../hooks/useInfiniteScroll'
 import { publicApi } from '../../services/publicApi'
+import { apiUrl } from '../../services/api'
 import { formatFullDate, truncateText } from '../../utils/format'
 import type { DiaryListItem } from '../../types'
 
@@ -22,7 +23,7 @@ function PhotoCollage({ photos }: { photos: DiaryListItem['photos'] }) {
       <div className="collage collage-many">
         {visible.map((photo, index) => (
           <div className="collage-cell" key={photo.id}>
-            <LazyImage src={photo.thumbnailUrl} wrapperClassName="collage-media" />
+            <LazyImage src={apiUrl(photo.thumbnailUrl)} wrapperClassName="collage-media" />
             {index === visible.length - 1 && restCount > 0 && (
               <span className="collage-more">+{restCount}</span>
             )}
@@ -36,7 +37,7 @@ function PhotoCollage({ photos }: { photos: DiaryListItem['photos'] }) {
     <div className={`collage collage-${photos.length}`}>
       {photos.map((photo) => (
         <div className="collage-cell" key={photo.id}>
-          <LazyImage src={photo.thumbnailUrl} wrapperClassName="collage-media" />
+          <LazyImage src={apiUrl(photo.thumbnailUrl)} wrapperClassName="collage-media" />
         </div>
       ))}
     </div>

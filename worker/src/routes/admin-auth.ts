@@ -129,11 +129,11 @@ const handleLogin: RouteHandler<Env> = async ({ request, env, url }) => {
     now,
   })
 
-  const secure = url.protocol === 'https:'
+  const { secure, sameSite } = sessionCookieOptions(request, url)
   return json(
     { admin: { id: admin.id, username: admin.username } },
     200,
-    { 'Set-Cookie': buildSessionCookie(token, SESSION_TTL_SECONDS, secure) },
+    { 'Set-Cookie': buildSessionCookie(token, SESSION_TTL_SECONDS, secure, sameSite) },
   )
 }
 
@@ -176,8 +176,8 @@ const handleLogout: RouteHandler<Env> = async ({ request, env, url }) => {
       })
     }
   }
-  const secure = url.protocol === 'https:'
-  return json({ loggedOut: true }, 200, { 'Set-Cookie': clearSessionCookie(secure) })
+  const { secure, sameSite } = sessionCookieOptions(request, url)
+  return json({ loggedOut: true }, 200, { 'Set-Cookie': clearSessionCookie(secure, sameSite) })
 }
 
 // 修改密码
@@ -217,8 +217,8 @@ const handleChangePassword: RouteHandler<Env> = async ({ request, env, url }) =>
     now,
   })
 
-  const secure = url.protocol === 'https:'
-  return json({ changed: true }, 200, { 'Set-Cookie': clearSessionCookie(secure) })
+  const { secure, sameSite } = sessionCookieOptions(request, url)
+  return json({ changed: true }, 200, { 'Set-Cookie': clearSessionCookie(secure, sameSite) })
 }
 
 // ---- 工具 ----
@@ -244,6 +244,18 @@ function validateUsername(username: string): void {
   if (!/^[A-Za-z0-9_-]{3,64}$/.test(username)) {
     throw new AppError('VALIDATION_ERROR', '用户名需为 3-64 位字母、数字、下划线或连字符')
   }
+}
+
+// Session Cookie 属性：跨站部署（前端与 API 不同源）时必须 SameSite=None + Secure，
+// 否则浏览器不会把 Cookie 发送到 API 域名
+function sessionCookieOptions(
+  request: Request,
+  url: URL,
+): { secure: boolean; sameSite: 'Lax' | 'None' } {
+  const secure = url.protocol === 'https:'
+  const origin = request.headers.get('Origin')
+  const crossSite = secure && origin !== null && origin !== url.origin
+  return { secure, sameSite: crossSite ? 'None' : 'Lax' }
 }
 
 function clientIp(request: Request): string {

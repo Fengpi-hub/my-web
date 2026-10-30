@@ -46,18 +46,21 @@
     // 正式环境
     "production": {
       "name": "life-diary",
+      "vars": {
+        "APP_ORIGIN": "https://cyccyc23cyc.dpdns.org"
+      },
       "d1_databases": [
         {
           "binding": "DB",
-          "database_name": "life-diary-db",
-          "database_id": "00000000-0000-0000-0000-000000000000",
+          "database_name": "life-diary-production-db",
+          "database_id": "902090d0-23d6-4aa6-b387-55fff2720763",
           "migrations_dir": "migrations"
         }
       ],
       "r2_buckets": [
         {
           "binding": "IMAGES_BUCKET",
-          "bucket_name": "life-diary-images"
+          "bucket_name": "life-diary-production-images"
         }
       ]
     }

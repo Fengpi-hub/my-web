@@ -4,6 +4,7 @@ import PhotoLightbox from '../../components/PhotoLightbox'
 import PeriodFilter from '../../components/PeriodFilter'
 import { useInfiniteScroll } from '../../hooks/useInfiniteScroll'
 import { publicApi } from '../../services/publicApi'
+import { apiUrl } from '../../services/api'
 import type { PeriodSummary, PublicPhotoSummary } from '../../types'
 
 const PAGE_SIZE = 24
@@ -51,7 +52,7 @@ function WallPhoto({ photo, onOpen }: { photo: PublicPhotoSummary; onOpen: () =>
     >
       <img
         className="wall-thumb"
-        src={photo.thumbnailUrl}
+        src={apiUrl(photo.thumbnailUrl)}
         alt=""
         loading="lazy"
         decoding="async"
@@ -59,7 +60,7 @@ function WallPhoto({ photo, onOpen }: { photo: PublicPhotoSummary; onOpen: () =>
       {visible && (
         <img
           className={`wall-full${fullLoaded ? ' is-loaded' : ''}`}
-          src={photo.imageUrl}
+          src={apiUrl(photo.imageUrl)}
           alt=""
           loading="lazy"
           decoding="async"
@@ -163,7 +164,7 @@ export default function PhotoWall() {
 
   const lightboxPhotos = items.map((photo) => ({
     id: photo.id,
-    imageUrl: photo.imageUrl,
+    imageUrl: apiUrl(photo.imageUrl),
     diaryId: photo.diaryId,
   }))
 

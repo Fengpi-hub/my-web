@@ -4,6 +4,7 @@ import VisitorLayout from '../../components/VisitorLayout'
 import LazyImage from '../../components/LazyImage'
 import { useIsMobile } from '../../hooks/useIsMobile'
 import { publicApi } from '../../services/publicApi'
+import { apiUrl } from '../../services/api'
 import type { HomePhoto } from '../../types'
 
 const PHOTO_LIMIT = 12
@@ -117,7 +118,7 @@ export default function Home() {
                 onClick={(event) => handleCardClick(photo, index, event.currentTarget)}
                 onKeyDown={handleKeyDown(photo)}
               >
-                <LazyImage src={photo.thumbnailUrl} wrapperClassName="home-photo-media" />
+                <LazyImage src={apiUrl(photo.thumbnailUrl)} wrapperClassName="home-photo-media" />
               </div>
             ))}
           </div>

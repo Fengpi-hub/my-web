@@ -4,6 +4,7 @@ import { ArrowLeft } from 'lucide-react'
 import VisitorLayout from '../../components/VisitorLayout'
 import PhotoLightbox from '../../components/PhotoLightbox'
 import { publicApi } from '../../services/publicApi'
+import { apiUrl } from '../../services/api'
 import { formatFullDate } from '../../utils/format'
 import type { PublicDiary } from '../../types'
 
@@ -39,7 +40,7 @@ export default function DiaryDetail() {
   const lightboxPhotos =
     diary?.photos.map((photo) => ({
       id: photo.id,
-      imageUrl: photo.imageUrl,
+      imageUrl: apiUrl(photo.imageUrl),
       diaryId: diary.id,
     })) ?? []
 
@@ -83,7 +84,7 @@ export default function DiaryDetail() {
                     aria-label={`查看第 ${index + 1} 张照片`}
                     onClick={() => setLightboxIndex(index)}
                   >
-                    <img src={photo.imageUrl} alt="" loading="lazy" decoding="async" />
+                    <img src={apiUrl(photo.imageUrl)} alt="" loading="lazy" decoding="async" />
                   </button>
                 ))}
               </div>
