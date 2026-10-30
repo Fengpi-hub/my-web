@@ -318,7 +318,7 @@ export default function AdminPhotos() {
                 type="button"
                 className="admin-btn admin-btn-danger"
                 onClick={() => setConfirmDelete(true)}
-                disabled={deleting || detail.uploadStatus !== 'uploaded'}
+                disabled={deleting}
               >
                 <Trash2 size={14} />
                 删除照片
