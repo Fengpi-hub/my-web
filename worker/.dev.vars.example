@@ -1,0 +1,5 @@
+# 管理员首次初始化凭据（生产环境务必用 `wrangler secret put ADMIN_SETUP_TOKEN` 配置，切勿提交真实值）
+ADMIN_SETUP_TOKEN=replace-with-a-strong-random-token
+
+# 可选：可信来源 Origin（仅本地 Vite 代理等特殊场景需要；生产同源部署可留空）
+# APP_ORIGIN=http://localhost:5173

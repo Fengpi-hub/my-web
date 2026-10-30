@@ -1,0 +1,83 @@
+/* 全局设计 token —— 日系清新、温柔、简约 */
+:root {
+  /* 颜色 */
+  --color-bg: #f8f5f0;            /* 奶油白：页面背景 */
+  --color-sakura: #f0e2e0;        /* 淡樱花粉：柔和强调 */
+  --color-sage: #e8ece4;          /* 鼠尾草绿：辅助背景 */
+  --color-text: #514741;          /* 深灰棕：主要文字 */
+  --color-text-secondary: #8f746c; /* 暖灰棕：辅助文字 */
+  --color-card: #ffffff;          /* 白色：卡片背景 */
+  --color-divider: #e8e2da;       /* 浅暖灰：分割线 */
+
+  /* 圆角 */
+  --radius-card: 16px;
+  --radius-photo: 10px;
+  --radius-button: 999px;
+
+  /* 间距 */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 40px;
+
+  /* 字体 */
+  --font-sans: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui,
+    -apple-system, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+/* 占位页通用样式（阶段一，后续由真实页面替换） */
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  padding: var(--space-lg);
+  text-align: center;
+}
+
+.page-title {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.page-hint {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: 0.9rem;
+}
+
+/* 尊重系统「减少动态效果」设置 */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

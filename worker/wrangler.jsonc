@@ -1,0 +1,68 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "life-diary-local",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-05-03",
+
+  // D1 数据库绑定：本地开发走本地 SQLite；
+  // 正式/预览部署前需用 `wrangler d1 create` 生成真实 database_id 后替换
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "life-diary-local-db",
+      "database_id": "00000000-0000-0000-0000-000000000000",
+      "migrations_dir": "migrations"
+    }
+  ],
+
+  // R2 图片存储绑定：Bucket 保持私有，所有读取经 Worker 权限校验
+  "r2_buckets": [
+    {
+      "binding": "IMAGES_BUCKET",
+      "bucket_name": "life-diary-local-images"
+    }
+  ],
+
+  // 预览环境独立资源占位。部署前用 `wrangler d1 create life-diary-preview-db`
+  // 与 `wrangler r2 bucket create life-diary-preview-images` 创建，并替换 database_id。
+  // Secret 需单独配置：`wrangler secret put ADMIN_SETUP_TOKEN --env preview`
+  "env": {
+    "preview": {
+      "name": "life-diary-preview",
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "life-diary-preview-db",
+          "database_id": "00000000-0000-0000-0000-000000000000",
+          "migrations_dir": "migrations"
+        }
+      ],
+      "r2_buckets": [
+        {
+          "binding": "IMAGES_BUCKET",
+          "bucket_name": "life-diary-preview-images"
+        }
+      ]
+    },
+
+    // 正式环境独立资源占位。必须确认账户现状后再创建，
+    // 禁止复用旧项目资源（如 cyc / cyc-images / SITE_DATA）。
+    "production": {
+      "name": "life-diary",
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "life-diary-db",
+          "database_id": "00000000-0000-0000-0000-000000000000",
+          "migrations_dir": "migrations"
+        }
+      ],
+      "r2_buckets": [
+        {
+          "binding": "IMAGES_BUCKET",
+          "bucket_name": "life-diary-images"
+        }
+      ]
+    }
+  }
+}

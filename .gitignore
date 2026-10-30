@@ -1,0 +1,21 @@
+# 依赖
+node_modules/
+
+# 构建产物
+dist/
+frontend/dist/
+worker/dist/
+
+# 环境变量与密钥（不得提交）
+.env
+.env.*
+!.env.example
+.dev.vars
+.dev.vars.*
+!.dev.vars.example
+.wrangler/
+
+# 其他
+.DS_Store
+Thumbs.db
+*.log
