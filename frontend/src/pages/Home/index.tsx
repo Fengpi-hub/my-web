@@ -78,7 +78,7 @@ export default function Home() {
       <main className="home-page">
         {status === 'loading' && (
           <div className="home-grid home-grid-loading" aria-label="正在加载照片">
-            {Array.from({ length: 9 }).map((_, index) => (
+            {Array.from({ length: 6 }).map((_, index) => (
               <div key={index} className="home-photo-skeleton" />
             ))}
           </div>
@@ -118,7 +118,12 @@ export default function Home() {
                 onClick={(event) => handleCardClick(photo, index, event.currentTarget)}
                 onKeyDown={handleKeyDown(photo)}
               >
-                <LazyImage src={apiUrl(photo.thumbnailUrl)} wrapperClassName="home-photo-media" />
+                <div className="home-photo-frame">
+                  <LazyImage src={apiUrl(photo.thumbnailUrl)} wrapperClassName="home-photo-media" />
+                </div>
+                <div className="home-photo-reflection" aria-hidden="true">
+                  <img src={apiUrl(photo.thumbnailUrl)} alt="" loading="lazy" decoding="async" />
+                </div>
               </div>
             ))}
           </div>

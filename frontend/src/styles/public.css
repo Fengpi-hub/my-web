@@ -352,12 +352,20 @@
 }
 
 .home-grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 18px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 22px;
   width: 100%;
-  max-width: 1040px;
+  max-width: 1280px;
+  padding: 6px 24px 0;
   perspective: 1100px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.home-grid::-webkit-scrollbar {
+  display: none;
 }
 
 .home-grid-loading {
@@ -366,26 +374,53 @@
 
 .home-photo-card {
   position: relative;
+  flex: 0 0 clamp(150px, 15vw, 220px);
+  cursor: pointer;
+  transform-style: preserve-3d;
+  transition:
+    transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1),
+    opacity 0.4s ease;
+  outline: none;
+}
+
+.home-photo-frame {
+  position: relative;
   aspect-ratio: 3 / 4;
   border-radius: 14px;
   overflow: hidden;
   background: var(--color-card);
   box-shadow: 0 10px 26px rgba(81, 71, 65, 0.13);
-  cursor: pointer;
-  transform-style: preserve-3d;
-  transition:
-    transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1),
-    opacity 0.4s ease,
-    box-shadow 0.4s ease;
-  outline: none;
+  transition: box-shadow 0.4s ease;
 }
 
-.home-photo-card:focus-visible {
+.home-photo-card:focus-visible .home-photo-frame {
   box-shadow: 0 0 0 3px rgba(143, 116, 108, 0.35), 0 10px 26px rgba(81, 71, 65, 0.13);
 }
 
-.home-photo-card.is-focused {
+.home-photo-card.is-focused .home-photo-frame {
   box-shadow: 0 16px 34px rgba(81, 71, 65, 0.24);
+}
+
+/* 照片倒影：翻转 + 渐隐遮罩 + 轻微模糊，只保留上半截倒影 */
+.home-photo-reflection {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  margin-top: 6px;
+  border-radius: 14px;
+  overflow: hidden;
+  transform: scaleY(-1);
+  filter: blur(2px);
+  opacity: 0.4;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0.22) 18%, transparent 42%);
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0.22) 18%, transparent 42%);
+}
+
+.home-photo-reflection img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .home-photo-media {
@@ -396,6 +431,7 @@
 }
 
 .home-photo-skeleton {
+  flex: 0 0 clamp(150px, 15vw, 220px);
   aspect-ratio: 3 / 4;
 }
 
@@ -984,26 +1020,23 @@
   }
 
   .home-grid {
-    display: flex;
     gap: 14px;
     max-width: none;
-    padding: 8px 17vw;
-    overflow-x: auto;
+    padding: 8px 21vw 12px;
     scroll-snap-type: x mandatory;
-    scrollbar-width: none;
-  }
-
-  .home-grid::-webkit-scrollbar {
-    display: none;
   }
 
   .home-photo-card {
-    flex: 0 0 66vw;
-    max-width: 340px;
+    flex: 0 0 58vw;
+    max-width: 300px;
     scroll-snap-align: center;
   }
 
-  .home-photo-card.is-focused {
+  .home-photo-reflection {
+    opacity: 0.3;
+  }
+
+  .home-photo-card.is-focused .home-photo-frame {
     box-shadow: 0 0 0 3px rgba(143, 116, 108, 0.3), 0 16px 34px rgba(81, 71, 65, 0.22);
   }
 
