@@ -374,7 +374,7 @@
 
 .home-photo-card {
   position: relative;
-  flex: 0 0 clamp(150px, 15vw, 220px);
+  flex: 0 0 clamp(170px, 17vw, 250px);
   cursor: pointer;
   transform-style: preserve-3d;
   transition:
@@ -431,7 +431,7 @@
 }
 
 .home-photo-skeleton {
-  flex: 0 0 clamp(150px, 15vw, 220px);
+  flex: 0 0 clamp(170px, 17vw, 250px);
   aspect-ratio: 3 / 4;
 }
 

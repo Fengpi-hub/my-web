@@ -7,7 +7,7 @@ import { publicApi } from '../../services/publicApi'
 import { apiUrl } from '../../services/api'
 import type { HomePhoto } from '../../types'
 
-const PHOTO_LIMIT = 12
+const PHOTO_LIMIT = 5
 
 // 首页：随机照片 CoverFlow（不显示日期与文字）
 export default function Home() {
@@ -78,7 +78,7 @@ export default function Home() {
       <main className="home-page">
         {status === 'loading' && (
           <div className="home-grid home-grid-loading" aria-label="正在加载照片">
-            {Array.from({ length: 6 }).map((_, index) => (
+            {Array.from({ length: 5 }).map((_, index) => (
               <div key={index} className="home-photo-skeleton" />
             ))}
           </div>
